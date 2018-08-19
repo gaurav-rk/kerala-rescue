@@ -28,7 +28,7 @@
     "active": true,
     "sheetId" : "1qAW_VirkACO_g2VVSIkKRMmZjzh6xUakSm8w-vnDT60",
     "map": {
-            "Date": ["Type::func", "augTime", "Timestamp "],
+            "Date": ["Type::func", "augTime", "Timestamp"],
             "Email": ["CONTACT EMAIL","CONTACT MOBILE 2","CONTACT MOBILE 1"],
             "Requestee": ["Address","Informant email id","Additional comments by informant","Informant mobile number"],
             "Time of SOS call": ["SOS call time","SOS call date"],
