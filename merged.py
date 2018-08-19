@@ -118,7 +118,7 @@ def getKeralaSheet():
         sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
         print("offset {}".format(offset))
         d = pd.DataFrame(r.get("https://keralarescue.in/data?offset={}".format(offset)).json().get("data"))
-        d.short_values("dateadded", ascending=False, inplace=True)
+        d.sort_values("dateadded", ascending=False, inplace=True)
         print("fount {} records in current scan".format(d.shape[0]))
         populate(d, sht1)
         offset = d.shape[0]
