@@ -14,6 +14,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 
+with open("temp", "r") as f:
+    offset = int(f.readline())
+
 credentials = ServiceAccountCredentials.from_json_keyfile_name('/Users/gmt9/kerala-6debd8a46f6e.json', scope)
 def populate(merged, sheet):
     cr = "@"
@@ -94,7 +97,7 @@ def dowork():
                 a = pd.DataFrame(sht.get_all_records()).astype(str)
                 a = modify(a, sheet["map"])
                 mod_list.append(a)
-        merged = pd.concat(mod_list).fillna("")
+        merged = pd.concat(mod_list).fillna("").sort_values("Date", ascending=False)
         print(merged.shape)
         populate(merged, merged_sheet)
         print("Done!")
@@ -105,16 +108,23 @@ def dowork():
 
 
 def getKeralaSheet():
+    global offset
     try:
         print("PID {} :: Starting kerala refresh".format(str(os.getpid())))
         gc = gspread.authorize(credentials)
 
         # Open a worksheet from spreadsheet with one shot
         sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
-        d = pd.DataFrame(r.get("https://keralarescue.in/data").json())
+        print("offset {}".format(offset))
+        d = pd.DataFrame(r.get("https://keralarescue.in/data?offset={}".format(offset)).json().get("data"))
+        print("fount {} records in current scan".format(d.shape[0]))
         populate(d, sht1)
+        offset = d.shape[0]
+        with open("temp", "w") as f:
+            f.write(str(offset))
     except Exception as e:
         print(str(e))
+        raise(e)
         print("kerala data pull :: Retry in 5 mins")
 
 def callfunc():
