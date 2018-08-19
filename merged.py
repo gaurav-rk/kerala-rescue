@@ -4,6 +4,7 @@ import time
 import threading
 import json
 import os
+from pathlib import Path
 from multiprocessing import Process, Queue
 from multiprocessing.pool import ThreadPool
 import re
@@ -17,7 +18,7 @@ scope = ['https://spreadsheets.google.com/feeds',
 with open("temp", "r") as f:
     offset = int(f.readline())
 
-credentials = ServiceAccountCredentials.from_json_keyfile_name('/Users/gmt9/kerala-6debd8a46f6e.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name(str(Path.home()) + '/kerala-6debd8a46f6e.json', scope)
 def populate(merged, sheet):
     cr = "@"
     s = []
