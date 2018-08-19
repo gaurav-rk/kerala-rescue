@@ -107,23 +107,27 @@ def dowork():
         raise(e)
         print("merge :: Retry in 5 mins")
 
-
+gc = gspread.authorize(credentials)
+sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
 def getKeralaSheet():
     global offset
     try:
+        with open("temp", "r") as f:
+            offset = int(f.readline())
         print("PID {} :: Starting kerala refresh".format(str(os.getpid())))
-        gc = gspread.authorize(credentials)
+    #   gc = gspread.authorize(credentials)
 
         # Open a worksheet from spreadsheet with one shot
-        sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
+    #   sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
         print("offset {}".format(offset))
         d = pd.DataFrame(r.get("https://keralarescue.in/data?offset={}".format(offset)).json().get("data"))
-        d.sort_values("dateadded", ascending=False, inplace=True)
+        d.sort_values("dateadded", inplace=True)
         print("fount {} records in current scan".format(d.shape[0]))
         populate(d, sht1, offset=offset)
-        offset = d.shape[0]
+        offset += d.shape[0]
         with open("temp", "w") as f:
             f.write(str(offset))
+        print("Done!")
     except Exception as e:
         print(str(e))
         raise(e)
@@ -132,15 +136,15 @@ def getKeralaSheet():
 def callfunc():
     try:
         queue = Queue()
-        p1 = Process(target=dowork)
+#        p1 = Process(target=dowork)
         p2 = Process(target=getKeralaSheet)
-        p1.start()
+#        p1.start()
         p2.start()
-        p1.join()
+#        p1.join()
         p2.join()
     except Exception as e:
         pass
-    threading.Timer(300, callfunc).start()
+    threading.Timer(20, callfunc).start()
 
 
 if __name__ == "__main__":
