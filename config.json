@@ -20,7 +20,7 @@
     "map": {
             "GPS Location": "Google Map Link",
             "requestee": "Contact Person & Volunteer comments",
-            "needs": "Problem Description",
+            "Problem Description": "Problem Description",
             "Date": ["Type::func", "augTime", "Timestamp"],
             "Time of SOS call": "Timestamp",
             "Status": "STATUS",
@@ -34,7 +34,7 @@
     "map": {
             "Date": ["Type::func", "augTime", "Timestamp"],
             "Email": ["CONTACT EMAIL","CONTACT MOBILE 2","CONTACT MOBILE 1"],
-            "Requestee": ["Address","Informant email id","Additional comments by informant","Informant mobile number"],
+            "requestee": ["Address","Informant email id","Additional comments by informant","Informant mobile number"],
             "Time of SOS call": ["SOS call time","SOS call date"],
             "GPS Location": "MAP LatLong coordinates",
             "Id": "DNT LEFT <-- R. NO",
@@ -50,7 +50,7 @@
     "map": {
             "Date": ["Type::func", "augTime", "Timestamp"],
             "Email": ["CONTACT EMAIL","CONTACT MOBILE 2","CONTACT MOBILE 1"],
-            "Requestee": ["Address","Informant email id","Additional comments by informant","Informant mobile number"],
+            "requestee": ["Address","Informant email id","Additional comments by informant","Informant mobile number"],
             "Time of SOS call": ["SOS call time","SOS call date"],
             "GPS Location": "MAP LatLong coordinates",
             "Id": "DNT LEFT <-- R. NO",
