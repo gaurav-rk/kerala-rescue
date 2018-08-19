@@ -31,8 +31,8 @@ def populate(merged, sheet, offset=0, original=True):
 
 
     for col, k in zip(list(merged), s):
-        print("Pid {} :: pushing column {}".format(str(os.getpid()), col))
-        print('populating {}{}:{}{}'.format(k,2 + offset,k,merged.shape[0]+1+offset))
+        print("\rPid {} :: pushing column {}".format(str(os.getpid()), col))
+        # print('populating {}{}:{}{}'.format(k,2 + offset,k,merged.shape[0]+1+offset))
         cell_list = sheet.range('{}{}:{}{}'.format(k,2 + offset,k,merged.shape[0]+1+offset))
 
 
@@ -110,18 +110,16 @@ def dowork():
         print(str(e))
         print("merge :: Retry in 5 mins")
 
-gc = gspread.authorize(credentials)
-sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
+# gc = gspread.authorize(credentials)
+# sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
 def getKeralaSheet():
     global offset
     try:
         with open("temp", "r") as f:
             offset = int(f.readline())
         print("PID {} :: Starting kerala refresh".format(str(os.getpid())))
-    #   gc = gspread.authorize(credentials)
-
-        # Open a worksheet from spreadsheet with one shot
-    #   sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
+        gc = gspread.authorize(credentials)
+        sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
         print("offset {}".format(offset))
         d = pd.DataFrame(r.get("https://keralarescue.in/data?offset={}".format(offset)).json().get("data"))
         d.sort_values("dateadded", inplace=True)
