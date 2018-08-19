@@ -108,7 +108,6 @@ def dowork():
         print("Done!")
     except Exception as e:
         print(str(e))
-        raise(e)
         print("merge :: Retry in 5 mins")
 
 gc = gspread.authorize(credentials)
@@ -134,7 +133,6 @@ def getKeralaSheet():
         print("Done!")
     except Exception as e:
         print(str(e))
-        raise(e)
         print("kerala data pull :: Retry in 5 mins")
 
 def callfunc():
