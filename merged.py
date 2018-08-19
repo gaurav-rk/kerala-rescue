@@ -27,7 +27,7 @@ def populate(merged, sheet, offset=0, original=True):
         s.append(cr)
     s += ["A" + x for x in s]
     if offset == 0 and original:
-        populate(pd.DataFrame([list(merged.columns)], columns=list(merged.columns)), offset=0, original=False)
+        populate(pd.DataFrame([list(merged.columns)], columns=list(merged.columns)), sheet, offset=0, original=False)
 
 
     for col, k in zip(list(merged), s):
