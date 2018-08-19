@@ -13,7 +13,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 
-credentials = ServiceAccountCredentials.from_json_keyfile_name('kerala-6debd8a46f6e.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name('/Users/gmt9/kerala-6debd8a46f6e.json', scope)
 def populate(merged, sheet):
     cr = "@"
     s = []
@@ -34,90 +34,104 @@ def populate(merged, sheet):
         # Send update in batch mode
         sheet.update_cells(cell_list)
 
+def augTime1(x):
+    return re.sub("\.[0-9]+Z","",re.sub(r'T'," ",re.sub(r'-', "/", x)))
+
+def augTime(a):
+    try:
+        date_obj = dt.strptime(a, '%d/%m/%Y %H:%M:%S')
+        return dt.strftime(date_obj, '%Y/%m/%d %H:%M:%S')
+    except:
+        pass
+    try:
+        date_obj = dt.strptime(a, '%m/%d/%Y %H:%M:%S')
+        return dt.strftime(date_obj, '%Y/%m/%d %H:%M:%S')
+    except:
+        pass
+    try:
+        date_obj = dt.strptime(a, '%m/%d/%Y %H:%M')
+        return dt.strftime(date_obj, '%Y/%m/%d %H:%M')
+    except:
+        print(a, "error")
+        return a
+
+def modify(df, maps):
+    def process(cols):
+        if cols[0] == "Date":
+            return
+        return [", ".join(x) for x in df[cols].values.tolist()]
+
+    print(df.columns)
+    delete = []
+    new_key = []
+    for map in maps:
+        target, source = map
+        source = [source] if type(source) == str else source
+        delete += source
+        new_key.append(target)
+        if len(source) == df.shape[0]:
+            df[target] = source
+            continue
+        df[target] = process(source)
+    delete = [delete.pop(key) for key in delete if key in target]
+    df.drop(delete, axis=1, inplace=True)
+    return df
 
 def dowork():
     try:
         gc = gspread.authorize(credentials)
         # Open a worksheet from spreadsheet with one shot
         print("PID {} :: starting merge at {} ".format(str(os.getpid()), str(dt.now())))
+
         sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
         sht2 = gc.open_by_key('1Z9qGNFCQHcbVrl_U2fPyTKZkC4nDIpwc3oUk-tiWUDM').sheet1
         sht3 = gc.open_by_key('1qAW_VirkACO_g2VVSIkKRMmZjzh6xUakSm8w-vnDT60').sheet1
+        merged_sheet = gc.open_by_key("1Xv5uy1_Q8w7y84neYKRuquZwfVVAnE5Qp6PrfM5XbMs").sheet1
 
         a1 = pd.DataFrame(sht1.get_all_records()).astype(str)
         a2 = pd.DataFrame(sht2.get_all_records()).astype(str)
         a3 = pd.DataFrame(sht3.get_all_records()).astype(str)
 
-        print(a1.columns)
+        print("sizes: \n a1 {}\n a2{} \n a3 {}".format(a1.shape, a2.shape, a3.shape))
 
-        a1["GPS Location"] = a1["Input Google Map URL"]
-        a1["requestee"] = a1['requestee'] + "\n" + a1['requestee_phone']
-        a1["Details"] = a1['detailcloth'] + " " + a1['detailfood'] +" " + a1['detailkit_util'] +" " + a1['detailmed'] +" " + a1['detailrescue'] +" " + a1['detailtoilet'] +" " + a1['detailwater']
-        a1["needs"] = a1['needcloth'] +" " + a1['needfood'] +" " + a1['needkit_util'] +" " + a1['needmed'] +" " + a1['needothers'] +" " + a1['needrescue'] +" " + a1['needtoilet'] +" " + a1['needwater']
-        a1["Date"] = [re.sub("\.[0-9]+Z","",re.sub(r'T'," ",re.sub(r'-', "/", x))) for x in a1["dateadded"]]
-        a1["Time of SOS call"] = a1["dateadded"]
-        a1.drop(['detailcloth', 'detailfood', 'detailkit_util', 'detailmed', 'detailrescue', 'detailtoilet', 'detailwater'] +
-                ['needcloth', 'needfood', 'needkit_util', 'needmed', 'needothers', 'needrescue', 'needtoilet', 'needwater'] +
-                ["Input Google Map URL", "dateadded"], axis=1, inplace=True)
+        a1 = modify(a1, {
+            "GPS Location": "Input Google Map URL",
+            "requestee": ["requestee", "requestee_phone"],
+            "Details": ['detailcloth','detailfood','detailkit_util','detailmed','detailrescue','detailtoilet','detailwater'],
+            "needs": ['needcloth','needfood','needkit_util','needmed','needothers','needrescue','needtoilet','needwater'],
+            "Date": [augTime1(x) for x in a1["dateadded"]],
+            "Time of SOS call": "dateadded"
+        })
 
+        a2 = modify(a2, {
+            "GPS Location": "Google Map Link",
+            "requestee": "Contact Person & Volunteer comments",
+            "Details": ["" for x in a2.index],
+            "needs": 'Problem Description',
+            "Date": [augTime(x) for x in a2['Timestamp - DNT']],
+            "Time of SOS call": "dateadded",
+            "Status": "STATUS",
+            "Id": 'R. No',
+            "LatLong": ["LAt", "Long", "LatLong"]
+        })
 
-        def augTime(a):
-            try:
-                date_obj = dt.strptime(a, '%d/%m/%Y %H:%M:%S')
-                return dt.strftime(date_obj, '%Y/%m/%d %H:%M:%S')
-            except:
-                pass
-            try:
-                date_obj = dt.strptime(a, '%m/%d/%Y %H:%M:%S')
-                return dt.strftime(date_obj, '%Y/%m/%d %H:%M:%S')
-            except:
-                pass
-            try:
-                date_obj = dt.strptime(a, '%m/%d/%Y %H:%M')
-                return dt.strftime(date_obj, '%Y/%m/%d %H:%M')
-            except:
-                print(a, "error")
-                return a
-
-        print(a2.columns)
-
-        a2["GPS Location"] = a2["Google Map Link"]
-        a2["Requestee"] = a2['Contact Person & Volunteer comments']
-        a2["Details"] = ""
-        a2["needs"] = a2['Problem Description']
-        a2["Date"]= [augTime(x) for x in a2['Timestamp - DNT']]
-        a2["Status"] = a2["STATUS"]
-        a2["Id"] = a2['R. No']
-        a2["Time of SOS call"] = a2["Time of SOS call"]
-        a2["LatLong"] = a2["LAt"] + " " + a2["Long"] + " " + a2["LatLong"]
-        a2.drop(["STATUS",'R. No',"LAt", "Long", "Google Map Link",'Contact Person & Volunteer comments','Problem Description', 'Timestamp - DNT'], axis=1, inplace=True)
-
-        print(a3.columns)
-        a3["Date"] = [augTime(x) for x in a3['Timestamp']]
-        a3["Email"] = a3["CONTACT EMAIL"] + " " + a3["CONTACT MOBILE 2"] + " " + a3["CONTACT MOBILE 1"]
-        a3["Requestee"] = a3["Address"] + " " \
-                        + a3["Informant email id"] + " " \
-                        + a3["Additional comments by informant"] + " " \
-                        + a3["Informant mobile number"]
-        a3["Time of SOS call"] = a3["SOS call time"] + " " + a3["SOS call date"]
-        a3["GPS Location"] = a3["MAP LatLong coordinates"]
-        a3["Status"] = a3["STATUS"]
-        a3["Source"] = a3["SOURCE"]
-        a3.drop(["Timestamp - DNT", "CONTACT EMAIL", "CONTACT MOBILE 2", "CONTACT MOBILE 1",
-                "Address", "Informant email id", "Additional comments by informant", "Informant mobile number",
-                "SOS call time", "SOS call date", "MAP LatLong coordinates", "STATUS", "SOURCE"],
-                axis=1, inplace=True)
-
+        a3 = modify(a3, {
+            "Date": [augTime(x) for x in a3['Timestamp']],
+            "Email": ["CONTACT EMAIL","CONTACT MOBILE 2","CONTACT MOBILE 1"],
+            "Requestee": ["Address","Informant email id","Additional comments by informant","Informant mobile number"],
+            "Time of SOS call": ["SOS call time","SOS call date"],
+            "GPS Location": "MAP LatLong coordinates",
+            "Status": "STATUS",
+            "Source": "SOURCE"
+        })
         merged = pd.concat([a1,a2,a3]).fillna("")
-
-        sh = gc.open_by_key("1Xv5uy1_Q8w7y84neYKRuquZwfVVAnE5Qp6PrfM5XbMs")
-        merged1 = sh.sheet1
-
-        populate(merged, merged1)
+        populate(merged, merged_sheet)
         print("Done!")
     except Exception as e:
         print(str(e))
+        raise(e)
         print("merge :: Retry in 5 mins")
+
 
 def getKeralaSheet():
     try:
