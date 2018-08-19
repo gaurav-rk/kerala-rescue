@@ -5,20 +5,24 @@
     "map": {
             "requestee": ["requestee", "requestee_phone"],
             "Details": ["detailcloth","detailfood","detailkit_util","detailmed","detailrescue","detailtoilet","detailwater"],
-            "needs": ["needcloth","needfood","needkit_util","needmed","needothers","needrescue","needtoilet","needwater"],
+            "Problem Description": ["needcloth","needfood","needkit_util","needmed","needothers","needrescue","needtoilet","needwater"],
             "Date": ["Type::func", "augTime1", "dateadded"],
+            "Location": "location",
+            "Status": "status",
+            "Id": "id",
+            "LatLong": ["latlng", "latlng_accuracy"],
             "Time of SOS call": "dateadded"
         }
   },
   {
-    "active": false,
+    "active": true,
     "sheetId" : "1Z9qGNFCQHcbVrl_U2fPyTKZkC4nDIpwc3oUk-tiWUDM",
     "map": {
             "GPS Location": "Google Map Link",
             "requestee": "Contact Person & Volunteer comments",
             "needs": "Problem Description",
-            "Date": ["Type::func", "augTime", "Timestamp - DNT"],
-            "Time of SOS call": "Timestamp - DNT",
+            "Date": ["Type::func", "augTime", "Timestamp"],
+            "Time of SOS call": "Timestamp",
             "Status": "STATUS",
             "Id": "R. No",
             "LatLong": ["LAt", "Long", "LatLong"]
@@ -35,6 +39,24 @@
             "GPS Location": "MAP LatLong coordinates",
             "Id": "DNT LEFT <-- R. NO",
             "Status": "STATUS",
+            "Location": "Address",
+            "LatLong": "MAP LatLong coordinates",
+            "Source": "SOURCE"
+        }
+  },
+  {
+    "active": true,
+    "sheetId" : "127Dhz7rk_TNre2CSBHoLCupmBT1_jReNV44PcS2fyoY",
+    "map": {
+            "Date": ["Type::func", "augTime", "Timestamp"],
+            "Email": ["CONTACT EMAIL","CONTACT MOBILE 2","CONTACT MOBILE 1"],
+            "Requestee": ["Address","Informant email id","Additional comments by informant","Informant mobile number"],
+            "Time of SOS call": ["SOS call time","SOS call date"],
+            "GPS Location": "MAP LatLong coordinates",
+            "Id": "DNT LEFT <-- R. NO",
+            "Status": "STATUS",
+            "Location": "Address",
+            "LatLong": "MAP LatLong coordinates",
             "Source": "SOURCE"
         }
   }

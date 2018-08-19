@@ -79,7 +79,10 @@ def modify(df, maps):
             continue
         delete += source
         df[target] = process(source)
-    [delete.pop(key) for key in delete if key in target]
+    for_delete = [delete.index(key) for key in delete if key in new_key]
+    [delete.pop(x) for x in for_delete]
+    print(delete, new_key, for_delete)
+    print("deleted {} items".format(len(for_delete)))
     df.drop(delete, axis=1, inplace=True)
     return df
 
@@ -106,6 +109,7 @@ def dowork():
         print("Done!")
     except Exception as e:
         print(str(e))
+        raise(e)
         print("MERGE :: Retry in 5 mins")
 
 # gc = gspread.authorize(credentials)
@@ -120,7 +124,7 @@ def getKeralaSheet():
         sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
         print("offset {}".format(offset))
         d = pd.DataFrame(r.get("https://keralarescue.in/data?offset={}".format(offset)).json().get("data"))
-        d.sort_values("dateadded", inplace=True)
+        # d.sort_values("dateadded", inplace=True)
         print("fount {} records in current scan".format(d.shape[0]))
         populate(d, sht1, offset=offset)
         offset += d.shape[0]
@@ -129,17 +133,18 @@ def getKeralaSheet():
         print("Done!")
     except Exception as e:
         print(str(e))
+        raise(e)
         print("kerala data pull :: Retry in 5 mins")
 
 def callfunc():
     try:
         # queue = Queue()
        p1 = Process(target=dowork)
-       p2 = Process(target=getKeralaSheet)
+       # p2 = Process(target=getKeralaSheet)
        p1.start()
-       p2.start()
+       # p2.start()
        p1.join()
-       p2.join()
+       # p2.join()
     except Exception as e:
         pass
     threading.Timer(300, callfunc).start()
