@@ -19,7 +19,7 @@ with open("temp", "r") as f:
     offset = int(f.readline())
 
 credentials = ServiceAccountCredentials.from_json_keyfile_name(str(Path.home()) + '/kerala-6debd8a46f6e.json', scope)
-def populate(merged, sheet):
+def populate(merged, sheet, offset=0):
     cr = "@"
     s = []
     for x in range(26):
@@ -30,7 +30,7 @@ def populate(merged, sheet):
 
     for col, k in zip(list(merged), s):
         print("Pid {} :: pushing column {}".format(str(os.getpid()), col))
-        cell_list = sheet.range('{}1:{}{}'.format(k,k,merged.shape[0]+1))
+        cell_list = sheet.range('{}{}:{}{}'.format(k,1 + offset,k,merged.shape[0]+1+offset))
 
         # Update values
         for cell, value in zip(cell_list,[col] + list(merged[col])):
@@ -120,7 +120,7 @@ def getKeralaSheet():
         d = pd.DataFrame(r.get("https://keralarescue.in/data?offset={}".format(offset)).json().get("data"))
         d.sort_values("dateadded", ascending=False, inplace=True)
         print("fount {} records in current scan".format(d.shape[0]))
-        populate(d, sht1)
+        populate(d, sht1, offset=offset)
         offset = d.shape[0]
         with open("temp", "w") as f:
             f.write(str(offset))
