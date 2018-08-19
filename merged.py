@@ -79,8 +79,8 @@ def modify(df, maps):
             continue
         delete += source
         df[target] = process(source)
-    for_delete = [delete.index(key) for key in delete if key in new_key]
-    [delete.pop(x) for x in for_delete]
+    for_delete = [key for key in delete if key in new_key]
+    [delete.pop(delete.index(x)) for x in for_delete]
     print(delete, new_key, for_delete)
     print("deleted {} items".format(len(for_delete)))
     df.drop(delete, axis=1, inplace=True)
