@@ -139,16 +139,16 @@ def getKeralaSheet():
 
 def callfunc():
     try:
-        queue = Queue()
-#        p1 = Process(target=dowork)
-        p2 = Process(target=getKeralaSheet)
-#        p1.start()
-        p2.start()
-#        p1.join()
-        p2.join()
+        # queue = Queue()
+       p1 = Process(target=dowork)
+       p2 = Process(target=getKeralaSheet)
+       p1.start()
+       p2.start()
+       p1.join()
+       p2.join()
     except Exception as e:
         pass
-    threading.Timer(20, callfunc).start()
+    threading.Timer(300, callfunc).start()
 
 
 if __name__ == "__main__":
