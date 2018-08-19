@@ -81,10 +81,10 @@ def modify(df, maps):
         df[target] = process(source)
     for_delete = [key for key in delete if key in new_key]
     [delete.pop(delete.index(x)) for x in for_delete]
-    print(delete, new_key, for_delete)
-    print("deleted {} items".format(len(for_delete)))
+    # print(delete, new_key, for_delete)
+    # print("deleted {} items".format(len(for_delete)))
     df = df.drop(delete, axis=1)
-    print(df.columns)
+    # print(df.columns)
     return df
 
 def dowork():
@@ -105,9 +105,7 @@ def dowork():
                 a = modify(a, sheet["map"])
                 mod_list.append(a)
         merged = pd.concat(mod_list).fillna("").sort_values("Date", ascending=False)
-        print(merged.columns)
-        print(merged.shape)
-        populate(merged, merged_sheet, original=False)
+        populate(merged, merged_sheet, original=True)
         print("Done!")
     except Exception as e:
         print(str(e))
