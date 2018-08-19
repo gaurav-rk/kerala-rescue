@@ -15,9 +15,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 
-with open("temp", "r") as f:
-    offset = int(f.readline())
-
 credentials = ServiceAccountCredentials.from_json_keyfile_name(str(Path.home()) + '/kerala-6debd8a46f6e.json', scope)
 def populate(merged, sheet, offset=0, original=True):
     cr = "@"
@@ -29,7 +26,7 @@ def populate(merged, sheet, offset=0, original=True):
     if offset == 0 and original:
         populate(pd.DataFrame([list(merged.columns)], columns=list(merged.columns)), sheet, offset=-1, original=False)
 
-
+    print("Started pushing data...")
     for col, k in zip(list(merged), s):
         print("\rPid {} :: pushing column {}".format(str(os.getpid()), col))
         # print('populating {}{}:{}{}'.format(k,2 + offset,k,merged.shape[0]+1+offset))
@@ -42,6 +39,7 @@ def populate(merged, sheet, offset=0, original=True):
 
         # Send update in batch mode
         sheet.update_cells(cell_list)
+    print("Done pushing...")
 
 def augTime1(x):
     return re.sub("\.[0-9]+Z","",re.sub(r'T'," ",re.sub(r'-', "/", x)))
@@ -104,11 +102,11 @@ def dowork():
                 mod_list.append(a)
         merged = pd.concat(mod_list).fillna("").sort_values("Date", ascending=False)
         print(merged.shape)
-        populate(merged, merged_sheet)
+        populate(merged, merged_sheet, original=False)
         print("Done!")
     except Exception as e:
         print(str(e))
-        print("merge :: Retry in 5 mins")
+        print("MERGE :: Retry in 5 mins")
 
 # gc = gspread.authorize(credentials)
 # sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
