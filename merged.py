@@ -66,24 +66,18 @@ def dowork():
                 date_obj = dt.strptime(a, '%d/%m/%Y %H:%M:%S')
                 return dt.strftime(date_obj, '%Y/%m/%d %H:%M:%S')
             except:
-                try:
-                    date_obj = dt.strptime(a, '%m/%d/%Y %H:%M:%S')
-                    return dt.strftime(date_obj, '%Y/%m/%d %H:%M:%S')
-                except:
-                    print(a, "error")
-                    return a
-
-        def augTime2(a):
+                pass
             try:
-                date_obj = dt.strptime(a, '%d/%m/%Y %H:%M:%S')
+                date_obj = dt.strptime(a, '%m/%d/%Y %H:%M:%S')
                 return dt.strftime(date_obj, '%Y/%m/%d %H:%M:%S')
             except:
-                try:
-                    date_obj = dt.strptime(a, '%m/%d/%Y %H:%M:%S')
-                    return dt.strftime(date_obj, '%Y/%m/%d %H:%M:%S')
-                except:
-                    print(a, "error")
-                    return a
+                pass
+            try:
+                date_obj = dt.strptime(a, '%m/%d/%Y %H:%M')
+                return dt.strftime(date_obj, '%Y/%m/%d %H:%M')
+            except:
+                print(a, "error")
+                return a
 
         print(a2.columns)
 
@@ -91,15 +85,15 @@ def dowork():
         a2["Requestee"] = a2['Contact Person & Volunteer comments']
         a2["Details"] = ""
         a2["needs"] = a2['Problem Description']
-        a2["Date"]= [augTime(x) for x in a2['Timestamp']]
+        a2["Date"]= [augTime(x) for x in a2['Timestamp - DNT']]
         a2["Status"] = a2["STATUS"]
         a2["Id"] = a2['R. No']
         a2["Time of SOS call"] = a2["Time of SOS call"]
         a2["LatLong"] = a2["LAt"] + " " + a2["Long"] + " " + a2["LatLong"]
-        a2.drop(["STATUS",'R. No',"LAt", "Long", "Google Map Link",'Contact Person & Volunteer comments','Problem Description', 'Timestamp'], axis=1, inplace=True)
+        a2.drop(["STATUS",'R. No',"LAt", "Long", "Google Map Link",'Contact Person & Volunteer comments','Problem Description', 'Timestamp - DNT'], axis=1, inplace=True)
 
         print(a3.columns)
-        a3["Date"] = [augTime2(x) for x in a3['Timestamp']]
+        a3["Date"] = [augTime(x) for x in a3['Timestamp']]
         a3["Email"] = a3["CONTACT EMAIL"] + " " + a3["CONTACT MOBILE 2"] + " " + a3["CONTACT MOBILE 1"]
         a3["Requestee"] = a3["Address"] + " " \
                         + a3["Informant email id"] + " " \
@@ -107,14 +101,14 @@ def dowork():
                         + a3["Informant mobile number"]
         a3["Time of SOS call"] = a3["SOS call time"] + " " + a3["SOS call date"]
         a3["GPS Location"] = a3["MAP LatLong coordinates"]
-        a3["Status"] = a3["safe ?"]
+        a3["Status"] = a3["STATUS"]
         a3["Source"] = a3["SOURCE"]
-        a3.drop(["Timestamp", "CONTACT EMAIL", "CONTACT MOBILE 2", "CONTACT MOBILE 1",
+        a3.drop(["Timestamp - DNT", "CONTACT EMAIL", "CONTACT MOBILE 2", "CONTACT MOBILE 1",
                 "Address", "Informant email id", "Additional comments by informant", "Informant mobile number",
-                "SOS call time", "SOS call date", "MAP LatLong coordinates", "safe ?", "SOURCE"],
+                "SOS call time", "SOS call date", "MAP LatLong coordinates", "STATUS", "SOURCE"],
                 axis=1, inplace=True)
 
-        merged = pd.concat([a1,a2]).fillna("")
+        merged = pd.concat([a1,a2,a3]).fillna("")
 
         sh = gc.open_by_key("1Xv5uy1_Q8w7y84neYKRuquZwfVVAnE5Qp6PrfM5XbMs")
         merged1 = sh.sheet1
