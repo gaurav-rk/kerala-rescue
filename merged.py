@@ -83,7 +83,8 @@ def modify(df, maps):
     [delete.pop(delete.index(x)) for x in for_delete]
     print(delete, new_key, for_delete)
     print("deleted {} items".format(len(for_delete)))
-    df.drop(delete, axis=1, inplace=True)
+    df = df.drop(delete, axis=1)
+    print(df.columns)
     return df
 
 def dowork():
@@ -104,6 +105,7 @@ def dowork():
                 a = modify(a, sheet["map"])
                 mod_list.append(a)
         merged = pd.concat(mod_list).fillna("").sort_values("Date", ascending=False)
+        print(merged.columns)
         print(merged.shape)
         populate(merged, merged_sheet, original=False)
         print("Done!")
@@ -140,11 +142,11 @@ def callfunc():
     try:
         # queue = Queue()
        p1 = Process(target=dowork)
-       p2 = Process(target=getKeralaSheet)
+       # p2 = Process(target=getKeralaSheet)
        p1.start()
-       p2.start()
+       # p2.start()
        p1.join()
-       p2.join()
+       # p2.join()
     except Exception as e:
         pass
     threading.Timer(300, callfunc).start()

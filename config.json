@@ -5,7 +5,7 @@
     "map": {
             "requestee": ["requestee", "requestee_phone"],
             "Details": ["detailcloth","detailfood","detailkit_util","detailmed","detailrescue","detailtoilet","detailwater"],
-            "Problem Description": ["needcloth","needfood","needkit_util","needmed","needothers","needrescue","needtoilet","needwater"],
+            "Problem Description": ["needcloth","needkit_util","needfood","needkit_util","needmed","needothers","needrescue","needtoilet","needwater"],
             "Date": ["Type::func", "augTime1", "dateadded"],
             "Location": "location",
             "Status": "status",
