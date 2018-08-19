@@ -2,6 +2,7 @@ import gspread
 import pandas as pd
 import time
 import threading
+import json
 import os
 from multiprocessing import Process, Queue
 from multiprocessing.pool import ThreadPool
@@ -60,71 +61,41 @@ def modify(df, maps):
         if cols[0] == "Date":
             return
         return [", ".join(x) for x in df[cols].values.tolist()]
-
-    print(df.columns)
     delete = []
     new_key = []
-    for map in maps:
-        target, source = map
+    for target in maps:
+        source = maps[target]
         source = [source] if type(source) == str else source
-        delete += source
         new_key.append(target)
-        if len(source) == df.shape[0]:
-            df[target] = source
+        if source[0] == "Type::func":
+            df[target] = [globals()[source[1]](x) for x in df[source[2]]]
+            delete.append(source[2])
             continue
+        delete += source
         df[target] = process(source)
-    delete = [delete.pop(key) for key in delete if key in target]
+    [delete.pop(key) for key in delete if key in target]
     df.drop(delete, axis=1, inplace=True)
     return df
 
 def dowork():
     try:
         gc = gspread.authorize(credentials)
-        # Open a worksheet from spreadsheet with one shot
+        merged_sheet = gc.open_by_key("1Xv5uy1_Q8w7y84neYKRuquZwfVVAnE5Qp6PrfM5XbMs").sheet1
         print("PID {} :: starting merge at {} ".format(str(os.getpid()), str(dt.now())))
 
-        sht1 = gc.open_by_key('1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic').sheet1
-        sht2 = gc.open_by_key('1Z9qGNFCQHcbVrl_U2fPyTKZkC4nDIpwc3oUk-tiWUDM').sheet1
-        sht3 = gc.open_by_key('1qAW_VirkACO_g2VVSIkKRMmZjzh6xUakSm8w-vnDT60').sheet1
-        merged_sheet = gc.open_by_key("1Xv5uy1_Q8w7y84neYKRuquZwfVVAnE5Qp6PrfM5XbMs").sheet1
+        with open("config.json", "r") as j:
+             sheets = json.load(j)
 
-        a1 = pd.DataFrame(sht1.get_all_records()).astype(str)
-        a2 = pd.DataFrame(sht2.get_all_records()).astype(str)
-        a3 = pd.DataFrame(sht3.get_all_records()).astype(str)
-
-        print("sizes: \n a1 {}\n a2{} \n a3 {}".format(a1.shape, a2.shape, a3.shape))
-
-        a1 = modify(a1, {
-            "GPS Location": "Input Google Map URL",
-            "requestee": ["requestee", "requestee_phone"],
-            "Details": ['detailcloth','detailfood','detailkit_util','detailmed','detailrescue','detailtoilet','detailwater'],
-            "needs": ['needcloth','needfood','needkit_util','needmed','needothers','needrescue','needtoilet','needwater'],
-            "Date": [augTime1(x) for x in a1["dateadded"]],
-            "Time of SOS call": "dateadded"
-        })
-
-        a2 = modify(a2, {
-            "GPS Location": "Google Map Link",
-            "requestee": "Contact Person & Volunteer comments",
-            "Details": ["" for x in a2.index],
-            "needs": 'Problem Description',
-            "Date": [augTime(x) for x in a2['Timestamp - DNT']],
-            "Time of SOS call": "dateadded",
-            "Status": "STATUS",
-            "Id": 'R. No',
-            "LatLong": ["LAt", "Long", "LatLong"]
-        })
-
-        a3 = modify(a3, {
-            "Date": [augTime(x) for x in a3['Timestamp']],
-            "Email": ["CONTACT EMAIL","CONTACT MOBILE 2","CONTACT MOBILE 1"],
-            "Requestee": ["Address","Informant email id","Additional comments by informant","Informant mobile number"],
-            "Time of SOS call": ["SOS call time","SOS call date"],
-            "GPS Location": "MAP LatLong coordinates",
-            "Status": "STATUS",
-            "Source": "SOURCE"
-        })
-        merged = pd.concat([a1,a2,a3]).fillna("")
+        mod_list = []
+        for k, sheet in enumerate(sheets):
+            print("processing sheet {}, sheetId {}".format(k, sheet["sheetId"]))
+            if sheet["active"]:
+                sht = gc.open_by_key(sheet["sheetId"]).sheet1
+                a = pd.DataFrame(sht.get_all_records()).astype(str)
+                a = modify(a, sheet["map"])
+                mod_list.append(a)
+        merged = pd.concat(mod_list).fillna("")
+        print(merged.shape)
         populate(merged, merged_sheet)
         print("Done!")
     except Exception as e:
