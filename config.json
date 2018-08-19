@@ -3,7 +3,6 @@
     "active": true,
     "sheetId" : "1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic",
     "map": {
-            "GPS Location": "Input Google Map URL",
             "requestee": ["requestee", "requestee_phone"],
             "Details": ["detailcloth","detailfood","detailkit_util","detailmed","detailrescue","detailtoilet","detailwater"],
             "needs": ["needcloth","needfood","needkit_util","needmed","needothers","needrescue","needtoilet","needwater"],
