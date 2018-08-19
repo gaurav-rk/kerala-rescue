@@ -19,18 +19,22 @@ with open("temp", "r") as f:
     offset = int(f.readline())
 
 credentials = ServiceAccountCredentials.from_json_keyfile_name(str(Path.home()) + '/kerala-6debd8a46f6e.json', scope)
-def populate(merged, sheet, offset=0):
+def populate(merged, sheet, offset=0, original=True):
     cr = "@"
     s = []
     for x in range(26):
         cr = chr(ord(cr) + 1)
         s.append(cr)
     s += ["A" + x for x in s]
+    if offset == 0 and original:
+        populate(pd.DataFrame([list(merged.columns)], columns=list(merged.columns)), offset=0, rec=False)
 
 
     for col, k in zip(list(merged), s):
         print("Pid {} :: pushing column {}".format(str(os.getpid()), col))
-        cell_list = sheet.range('{}{}:{}{}'.format(k,1 + offset,k,merged.shape[0]+1+offset))
+        print('populating {}{}:{}{}'.format(k,2 + offset,k,merged.shape[0]+1+offset))
+        cell_list = sheet.range('{}{}:{}{}'.format(k,2 + offset,k,merged.shape[0]+1+offset))
+
 
         # Update values
         for cell, value in zip(cell_list,[col] + list(merged[col])):
