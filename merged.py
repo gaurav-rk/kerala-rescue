@@ -112,7 +112,7 @@ def dowork():
                 a = modify(a, sheet["map"])
                 mod_list.append(a)
         merged = pd.concat(mod_list).fillna("").sort_values("Date", ascending=False)
-        merged.loc[merged["File name" == "", "File name"]] = "keralarescue"
+        merged.loc[merged["File name"] == "", "File name"] = "keralarescue"
         populate(merged, merged_sheet, original=True)
         print("Done!")
     except Exception as e:
@@ -148,11 +148,11 @@ def callfunc():
     try:
         # queue = Queue()
        p1 = Process(target=dowork)
-       p2 = Process(target=getKeralaSheet)
+       # p2 = Process(target=getKeralaSheet)
        p1.start()
-       p2.start()
+       # p2.start()
        p1.join()
-       p2.join()
+       # p2.join()
     except Exception as e:
         pass
     threading.Timer(300, callfunc).start()
