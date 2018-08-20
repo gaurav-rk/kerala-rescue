@@ -44,6 +44,9 @@ def populate(merged, sheet, offset=0, original=True):
 def augTime1(x):
     return re.sub("\.[0-9]+Z","",re.sub(r'T'," ",re.sub(r'-', "/", x)))
 
+def emptycolumn(x):
+    return ""
+
 def defaultFileName(x):
     return x if len(x)==0 else "KeralaRescue"
 
@@ -109,6 +112,7 @@ def dowork():
                 a = modify(a, sheet["map"])
                 mod_list.append(a)
         merged = pd.concat(mod_list).fillna("").sort_values("Date", ascending=False)
+        merged["FILE NAME"].fillna("keralarescue.in")
         populate(merged, merged_sheet, original=True)
         print("Done!")
     except Exception as e:
@@ -144,11 +148,11 @@ def callfunc():
     try:
         # queue = Queue()
        p1 = Process(target=dowork)
-       p2 = Process(target=getKeralaSheet)
+       # p2 = Process(target=getKeralaSheet)
        p1.start()
-       p2.start()
+       # p2.start()
        p1.join()
-       p2.join()
+       # p2.join()
     except Exception as e:
         pass
     threading.Timer(300, callfunc).start()
