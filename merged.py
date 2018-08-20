@@ -112,7 +112,7 @@ def dowork():
                 a = modify(a, sheet["map"])
                 mod_list.append(a)
         merged = pd.concat(mod_list).fillna("").sort_values("Date", ascending=False)
-        merged["FILE NAME"].fillna("keralarescue.in")
+        merged["File name"].fillna("keralarescue.in")
         populate(merged, merged_sheet, original=True)
         print("Done!")
     except Exception as e:
