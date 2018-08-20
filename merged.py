@@ -44,6 +44,9 @@ def populate(merged, sheet, offset=0, original=True):
 def augTime1(x):
     return re.sub("\.[0-9]+Z","",re.sub(r'T'," ",re.sub(r'-', "/", x)))
 
+def defaultFileName(x):
+    return x if len(x)==0 else "KeralaRescue"
+
 def augTime(a):
     try:
         date_obj = dt.strptime(a, '%d/%m/%Y %H:%M:%S')

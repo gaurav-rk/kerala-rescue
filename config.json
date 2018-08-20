@@ -10,6 +10,7 @@
             "Location": "location",
             "Status": "status",
             "Id": "id",
+            "FILE NAME" : ["Type::func", "defaultFileName", "FILE NAME"],
             "LatLong": ["latlng", "latlng_accuracy"],
             "Time of SOS call": "dateadded"
         }
@@ -18,14 +19,13 @@
     "active": true,
     "sheetId" : "1Z9qGNFCQHcbVrl_U2fPyTKZkC4nDIpwc3oUk-tiWUDM",
     "map": {
-            "GPS Location": "Google Map Link",
             "requestee": "Contact Person & Volunteer comments",
             "Problem Description": "Problem Description",
             "Date": ["Type::func", "augTime", "Timestamp"],
             "Time of SOS call": "Timestamp",
             "Status": "STATUS",
             "Id": "R. No",
-            "LatLong": ["LAt", "Long", "LatLong"]
+            "LatLong": ["LAt", "Long", "LatLong", "Google Map Link"]
         }
   },
   {
