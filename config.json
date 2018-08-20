@@ -40,8 +40,7 @@
             "Id": "DNT LEFT <-- R. NO",
             "Status": "STATUS",
             "Location": "Address",
-            "LatLong": "MAP LatLong coordinates",
-            "Source": "SOURCE"
+            "LatLong": "MAP LatLong coordinates"
         }
   },
   {

@@ -102,6 +102,7 @@ def dowork():
             if sheet["active"]:
                 sht = gc.open_by_key(sheet["sheetId"]).sheet1
                 a = pd.DataFrame(sht.get_all_records()).astype(str)
+                print(a.columns)
                 a = modify(a, sheet["map"])
                 mod_list.append(a)
         merged = pd.concat(mod_list).fillna("").sort_values("Date", ascending=False)
