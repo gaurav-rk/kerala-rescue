@@ -103,16 +103,18 @@ def dowork():
              sheets = json.load(j)
 
         mod_list = []
-        for k, sheet in enumerate(sheets):
+        for k, sheet in enumerate(sheets["sheets"]):
             print("processing sheet {}, sheetId {}".format(k, sheet["sheetId"]))
             if sheet["active"]:
                 sht = gc.open_by_key(sheet["sheetId"]).sheet1
                 a = pd.DataFrame(sht.get_all_records()).astype(str)
-                print(a.columns)
+                # print(a.columns)
                 a = modify(a, sheet["map"])
                 mod_list.append(a)
-        merged = pd.concat(mod_list).fillna("").sort_values("Date", ascending=False)
+        merged = pd.concat(mod_list, sort=False).fillna("").sort_values("Date", ascending=False)
         merged.loc[merged["File name"] == "", "File name"] = "keralarescue"
+        merged.drop(sheets["delete_columns"], axis=1, inplace=True)
+        # print(merged.columns)
         populate(merged, merged_sheet, original=True)
         print("Done!")
     except Exception as e:
@@ -146,7 +148,6 @@ def getKeralaSheet():
 
 def callfunc():
     try:
-        # queue = Queue()
        p1 = Process(target=dowork)
        p2 = Process(target=getKeralaSheet)
        p1.start()

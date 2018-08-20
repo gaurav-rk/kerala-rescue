@@ -1,62 +1,66 @@
-[
-  {
-    "active": true,
-    "sheetId" : "1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic",
-    "map": {
-            "requestee": ["requestee", "requestee_phone"],
-            "details": ["detailcloth","detailfood","detailkit_util","detailmed","detailrescue","detailtoilet","detailwater"],
-            "needs": ["needcloth","needkit_util","needfood","needkit_util","needmed","needothers","needrescue","needtoilet","needwater"],
-            "Date": ["Type::func", "augTime1", "dateadded"],
-            "Location": "location",
-            "Status": "status",
-            "Id": "id",
-            "LatLong": ["latlng", "latlng_accuracy"],
-            "Time of SOS call": "dateadded"
-        }
-  },
-  {
-    "active": true,
-    "sheetId" : "1Z9qGNFCQHcbVrl_U2fPyTKZkC4nDIpwc3oUk-tiWUDM",
-    "map": {
-            "requestee": "Contact Person & Volunteer comments",
-            "Problem Description": "Problem Description",
-            "Date": ["Type::func", "augTime", "Timestamp"],
-            "Time of SOS call": "Timestamp",
-            "Status": "STATUS",
-            "Id": "R. No",
-            "LatLong": ["LAt", "Long", "LatLong", "Google Map Link"]
-        }
-  },
-  {
-    "active": true,
-    "sheetId" : "1qAW_VirkACO_g2VVSIkKRMmZjzh6xUakSm8w-vnDT60",
-    "map": {
-            "Date": ["Type::func", "augTime", "Timestamp"],
-            "Email": ["CONTACT EMAIL","CONTACT MOBILE 2","CONTACT MOBILE 1"],
-            "requestee": ["Address","Informant email id","Additional comments by informant","Informant mobile number"],
-            "Time of SOS call": ["SOS call time","SOS call date"],
-            "GPS Location": "MAP LatLong coordinates",
-            "Id": "DNT LEFT <-- R. NO",
-            "Status": "STATUS",
-            "Location": "Address",
-            "LatLong": "MAP LatLong coordinates",
-            "Source": "SOURCE"
-        }
-  },
-  {
-    "active": true,
-    "sheetId" : "127Dhz7rk_TNre2CSBHoLCupmBT1_jReNV44PcS2fyoY",
-    "map": {
-            "Date": ["Type::func", "augTime", "Timestamp"],
-            "Email": ["CONTACT EMAIL","CONTACT MOBILE 2","CONTACT MOBILE 1"],
-            "requestee": ["Address","Informant email id","Additional comments by informant","Informant mobile number"],
-            "Time of SOS call": ["SOS call time","SOS call date"],
-            "GPS Location": "MAP LatLong coordinates",
-            "Id": "DNT LEFT <-- R. NO",
-            "Status": "STATUS",
-            "Location": "Address",
-            "LatLong": "MAP LatLong coordinates",
-            "Source": "SOURCE"
-        }
-  }
-]
+{
+  "delete_columns" : ["Translate", "DUPE groups", "FOLLOW UP COMMENTS", "REPEATED DIRECT REQUEST date - Escalation update ", "SORT CODE"],
+  "sheets": [
+    {
+      "active": true,
+      "sheetId" : "1BnzyulGK90zLp54Mu2wcP0_2Tpo0cFfEVYBgahdgUic",
+      "map": {
+              "requestee": ["requestee", "requestee_phone"],
+              "details": ["detailcloth","detailfood","detailkit_util","detailmed","detailrescue","detailtoilet","detailwater"],
+              "needs": ["needcloth","needkit_util","needfood","needkit_util","needmed","needothers","needrescue","needtoilet","needwater"],
+              "Date": ["Type::func", "augTime1", "dateadded"],
+              "Location": "location",
+              "Status": "status",
+              "kerala Id": "id",
+              "LatLong": ["latlng", "latlng_accuracy"],
+              "Time of SOS call": "dateadded"
+          }
+    },
+    {
+      "active": true,
+      "sheetId" : "1Z9qGNFCQHcbVrl_U2fPyTKZkC4nDIpwc3oUk-tiWUDM",
+      "map": {
+              "requestee": "Contact Person & Volunteer comments",
+              "Problem Description": "Problem Description",
+              "Date": ["Type::func", "augTime", "Timestamp"],
+              "Time of SOS call": "Timestamp",
+              "Status": "STATUS",
+              "LatLong": ["LAt", "Long", "LatLong", "Google Map Link"]
+          }
+    },
+    {
+      "active": true,
+      "sheetId" : "1qAW_VirkACO_g2VVSIkKRMmZjzh6xUakSm8w-vnDT60",
+      "map": {
+              "Date": ["Type::func", "augTime", "Timestamp"],
+              "Email": ["CONTACT EMAIL","CONTACT MOBILE 2","CONTACT MOBILE 1"],
+              "requestee": ["Address","Informant email id","Additional comments by informant","Informant mobile number"],
+              "Time of SOS call": ["SOS call time","SOS call date"],
+              "GPS Location": "MAP LatLong coordinates",
+              "R. No": "DNT LEFT <-- R. NO",
+              "Status": "STATUS",
+              "Location": "Address",
+              "PRIORITY": "PRIORITY keyword",
+              "LatLong": "MAP LatLong coordinates",
+              "Source": "SOURCE"
+          }
+    },
+    {
+      "active": true,
+      "sheetId" : "127Dhz7rk_TNre2CSBHoLCupmBT1_jReNV44PcS2fyoY",
+      "map": {
+              "Date": ["Type::func", "augTime", "Timestamp"],
+              "Email": ["CONTACT EMAIL","CONTACT MOBILE 2","CONTACT MOBILE 1"],
+              "requestee": ["Address","Informant email id","Additional comments by informant","Informant mobile number"],
+              "Time of SOS call": ["SOS call time","SOS call date"],
+              "GPS Location": "MAP LatLong coordinates",
+              "R. No": "DNT LEFT <-- R. NO",
+              "Status": "STATUS",
+              "Location": "Address",
+              "PRIORITY": "PRIORITY keyword",
+              "LatLong": "MAP LatLong coordinates",
+              "Source": "SOURCE"
+          }
+    }
+  ]
+}
