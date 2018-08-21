@@ -97,8 +97,8 @@ def modify(df, maps):
 def dowork():
     try:
         gc = gspread.authorize(credentials)
-        # merged_sheet = gc.open_by_key("1Xv5uy1_Q8w7y84neYKRuquZwfVVAnE5Qp6PrfM5XbMs").sheet1
-        merged_sheet = gc.open_by_key("1GyoIZOCUCWTXb7HeJHkRQgdr3D4OefqbU8jcjfLMI-s").sheet1
+        merged_sheet = gc.open_by_key("1Xv5uy1_Q8w7y84neYKRuquZwfVVAnE5Qp6PrfM5XbMs").sheet1
+        # merged_sheet = gc.open_by_key("1GyoIZOCUCWTXb7HeJHkRQgdr3D4OefqbU8jcjfLMI-s").sheet1 # for test only
         print("PID {} :: starting merge at {} ".format(str(os.getpid()), str(dt.now())))
 
         with open("config.json", "r") as j:
@@ -124,7 +124,7 @@ def dowork():
             merged_df = pd.DataFrame(data).astype(str).fillna("")
         except:
             merged_df = pd.DataFrame(columns=list(merged.columns)).astype(str)
-        print(merged.columns, merged_df.columns, len(merged.columns), len(merged_df.columns))
+        # print(merged.columns, merged_df.columns, len(merged.columns), len(merged_df.columns))
         assert(len(merged.columns) == len(merged_df.columns))
         merged = pd.concat([merged_df, merged], sort=False).drop_duplicates(keep=False)
         print("appending {} rows to haystack with shape {}".format(merged.shape, merged_df.shape))
@@ -162,11 +162,11 @@ def getKeralaSheet():
 def callfunc():
     try:
        p1 = Process(target=dowork)
-       # p2 = Process(target=getKeralaSheet)
+       p2 = Process(target=getKeralaSheet)
        p1.start()
-       # p2.start()
+       p2.start()
        p1.join()
-       # p2.join()
+       p2.join()
     except Exception as e:
         pass
     threading.Timer(10, callfunc).start()
