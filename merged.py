@@ -169,7 +169,7 @@ def callfunc():
        p2.join()
     except Exception as e:
         pass
-    threading.Timer(10, callfunc).start()
+    threading.Timer(180, callfunc).start()
 
 
 if __name__ == "__main__":
