@@ -41,11 +41,9 @@ def populate(merged, sheet, offset=0, original=True):
         sheet.update_cells(cell_list)
     print("Done pushing...")
 
+
 def augTime1(x):
     return re.sub("\.[0-9]+Z","",re.sub(r'T'," ",re.sub(r'-', "/", x)))
-
-def needsagr(cols):
-    return
 
 def emptycolumn(x):
     return ""
@@ -68,7 +66,7 @@ def augTime(a):
         date_obj = dt.strptime(a, '%m/%d/%Y %H:%M')
         return dt.strftime(date_obj, '%Y/%m/%d %H:%M')
     except:
-        print(a, "error")
+        print(a, "timestamp error")
         return a
 
 def modify(df, maps):
@@ -99,7 +97,8 @@ def modify(df, maps):
 def dowork():
     try:
         gc = gspread.authorize(credentials)
-        merged_sheet = gc.open_by_key("1Xv5uy1_Q8w7y84neYKRuquZwfVVAnE5Qp6PrfM5XbMs").sheet1
+        # merged_sheet = gc.open_by_key("1Xv5uy1_Q8w7y84neYKRuquZwfVVAnE5Qp6PrfM5XbMs").sheet1
+        merged_sheet = gc.open_by_key("1GyoIZOCUCWTXb7HeJHkRQgdr3D4OefqbU8jcjfLMI-s").sheet1
         print("PID {} :: starting merge at {} ".format(str(os.getpid()), str(dt.now())))
 
         with open("config.json", "r") as j:
@@ -117,8 +116,19 @@ def dowork():
         merged = pd.concat(mod_list, sort=False).fillna("").sort_values("Date", ascending=False)
         merged.loc[merged["File name"] == "", "File name"] = "keralarescue"
         merged.drop(sheets["delete_columns"], axis=1, inplace=True)
+        # merged.sort_values(["Date","File name"], ascending=[False, False], inplace=True)
         # print(merged.columns)
-        populate(merged, merged_sheet, original=True)
+        try:
+            data = merged_sheet.get_all_records()
+            assert(len(data) != 0)
+            merged_df = pd.DataFrame(data).astype(str).fillna("")
+        except:
+            merged_df = pd.DataFrame(columns=list(merged.columns)).astype(str)
+        print(merged.columns, merged_df.columns, len(merged.columns), len(merged_df.columns))
+        assert(len(merged.columns) == len(merged_df.columns))
+        merged = pd.concat([merged_df, merged], sort=False).drop_duplicates(keep=False)
+        print("appending {} rows to haystack with shape {}".format(merged.shape, merged_df.shape))
+        populate(merged, merged_sheet, offset=merged_df.shape[0], original=True)
         print("MERGE :: Done!")
     except Exception as e:
         print(str(e))
@@ -152,14 +162,14 @@ def getKeralaSheet():
 def callfunc():
     try:
        p1 = Process(target=dowork)
-       p2 = Process(target=getKeralaSheet)
+       # p2 = Process(target=getKeralaSheet)
        p1.start()
-       p2.start()
+       # p2.start()
        p1.join()
-       p2.join()
+       # p2.join()
     except Exception as e:
         pass
-    threading.Timer(300, callfunc).start()
+    threading.Timer(10, callfunc).start()
 
 
 if __name__ == "__main__":
