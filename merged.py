@@ -121,13 +121,14 @@ def dowork():
         try:
             data = merged_sheet.get_all_records()
             assert(len(data) != 0)
-            merged_df = pd.DataFrame(data).astype(str).fillna("")[list(merged.columns)]
+            merged_df = pd.DataFrame(data).astype(str).fillna("")
         except:
             merged_df = pd.DataFrame(columns=list(merged.columns)).astype(str)
-        # print(merged.columns, merged_df.columns, len(merged.columns), len(merged_df.columns))
+
         assert(len(merged.columns) == len(merged_df.columns))
-        merged = pd.concat([merged_df, merged], sort=False).drop_duplicates(keep=False)
+        merged = pd.concat([merged_df, merged], sort=True).drop_duplicates(keep=False)
         print("appending {} rows to haystack with shape {}".format(merged.shape, merged_df.shape))
+        print(merged.columns, merged_df.columns, len(merged.columns), len(merged_df.columns))
         if merged.shape[0] > 0:
             populate(merged, merged_sheet, offset=merged_df.shape[0], original=True)
         print("MERGE :: Done!")
@@ -163,11 +164,11 @@ def getKeralaSheet():
 def callfunc():
     try:
        p1 = Process(target=dowork)
-       p2 = Process(target=getKeralaSheet)
+       # p2 = Process(target=getKeralaSheet)
        p1.start()
-       p2.start()
+       # p2.start()
        p1.join()
-       p2.join()
+       # p2.join()
     except Exception as e:
         pass
     threading.Timer(180, callfunc).start()
