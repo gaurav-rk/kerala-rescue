@@ -113,7 +113,7 @@ def dowork():
                 # print(a.columns)
                 a = modify(a, sheet["map"])
                 mod_list.append(a)
-        merged = pd.concat(mod_list, sort=False).fillna("")
+        merged = pd.concat(mod_list, sort=True).fillna("")
         merged.loc[merged["File name"] == "", "File name"] = "keralarescue"
         merged.drop(sheets["delete_columns"], axis=1, inplace=True)
         # merged.sort_values(["Date","File name"], ascending=[False, False], inplace=True)
