@@ -7,7 +7,7 @@
       "map": {
               "requestee": ["requestee", "requestee_phone"],
               "details": ["detailcloth","detailfood","detailkit_util","detailmed","detailrescue","detailtoilet","detailwater"],
-              "needs": ["Type::func", "needsagr", ["needcloth","needkit_util","needfood","needkit_util","needmed","needothers","needrescue","needtoilet","needwater"]],
+              "needs": ["needcloth","needkit_util","needfood","needkit_util","needmed","needothers","needrescue","needtoilet","needwater"],
               "Date": ["Type::func", "augTime1", "dateadded"],
               "Location": "location",
               "Status": "status",
