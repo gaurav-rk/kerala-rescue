@@ -128,7 +128,8 @@ def dowork():
         assert(len(merged.columns) == len(merged_df.columns))
         merged = pd.concat([merged_df, merged], sort=False).drop_duplicates(keep=False)
         print("appending {} rows to haystack with shape {}".format(merged.shape, merged_df.shape))
-        populate(merged, merged_sheet, offset=merged_df.shape[0], original=True)
+        if merged.shape[0] > 0:
+            populate(merged, merged_sheet, offset=merged_df.shape[0], original=True)
         print("MERGE :: Done!")
     except Exception as e:
         print(str(e))
