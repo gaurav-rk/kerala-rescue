@@ -44,6 +44,9 @@ def populate(merged, sheet, offset=0, original=True):
 def augTime1(x):
     return re.sub("\.[0-9]+Z","",re.sub(r'T'," ",re.sub(r'-', "/", x)))
 
+def needsagr(cols):
+    return
+
 def emptycolumn(x):
     return ""
 
@@ -111,12 +114,12 @@ def dowork():
                 # print(a.columns)
                 a = modify(a, sheet["map"])
                 mod_list.append(a)
-        merged = pd.concat(mod_list, sort=True).fillna("").sort_values("Date", ascending=False)
+        merged = pd.concat(mod_list, sort=False).fillna("").sort_values("Date", ascending=False)
         merged.loc[merged["File name"] == "", "File name"] = "keralarescue"
         merged.drop(sheets["delete_columns"], axis=1, inplace=True)
         # print(merged.columns)
         populate(merged, merged_sheet, original=True)
-        print("Done!")
+        print("MERGE :: Done!")
     except Exception as e:
         print(str(e))
         raise(e)
@@ -140,7 +143,7 @@ def getKeralaSheet():
         offset += d.shape[0]
         with open("temp", "w") as f:
             f.write(str(offset))
-        print("Done!")
+        print("kerala data pull :: Done!")
     except Exception as e:
         print(str(e))
         raise(e)
