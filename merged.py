@@ -113,7 +113,7 @@ def dowork():
                 # print(a.columns)
                 a = modify(a, sheet["map"])
                 mod_list.append(a)
-        merged = pd.concat(mod_list, sort=False).fillna("").sort_values("Date", ascending=False)
+        merged = pd.concat(mod_list, sort=False).fillna("")
         merged.loc[merged["File name"] == "", "File name"] = "keralarescue"
         merged.drop(sheets["delete_columns"], axis=1, inplace=True)
         # merged.sort_values(["Date","File name"], ascending=[False, False], inplace=True)
@@ -121,7 +121,7 @@ def dowork():
         try:
             data = merged_sheet.get_all_records()
             assert(len(data) != 0)
-            merged_df = pd.DataFrame(data).astype(str).fillna("")
+            merged_df = pd.DataFrame(data).astype(str).fillna("")[list(merged.columns)]
         except:
             merged_df = pd.DataFrame(columns=list(merged.columns)).astype(str)
         # print(merged.columns, merged_df.columns, len(merged.columns), len(merged_df.columns))
