@@ -110,7 +110,7 @@ def dowork():
             if sheet["active"]:
                 sht = gc.open_by_key(sheet["sheetId"]).sheet1
                 a = pd.DataFrame(sht.get_all_records()).astype(str)
-                # print(a.columns)
+                print(a.columns)
                 a = modify(a, sheet["map"])
                 mod_list.append(a)
         merged = pd.concat(mod_list, sort=True).fillna("")
@@ -124,7 +124,7 @@ def dowork():
             merged_df = pd.DataFrame(data).astype(str).fillna("")
         except:
             merged_df = pd.DataFrame(columns=list(merged.columns)).astype(str)
-
+        print(merged.columns, merged_df.columns)
         assert(len(merged.columns) == len(merged_df.columns))
         merged = pd.concat([merged_df, merged], sort=True).drop_duplicates(keep=False)
         print("appending {} rows to haystack with shape {}".format(merged.shape, merged_df.shape))
@@ -164,11 +164,11 @@ def getKeralaSheet():
 def callfunc():
     try:
        p1 = Process(target=dowork)
-       p2 = Process(target=getKeralaSheet)
+       # p2 = Process(target=getKeralaSheet)
        p1.start()
-       p2.start()
+       # p2.start()
        p1.join()
-       p2.join()
+       # p2.join()
     except Exception as e:
         pass
     threading.Timer(180, callfunc).start()
